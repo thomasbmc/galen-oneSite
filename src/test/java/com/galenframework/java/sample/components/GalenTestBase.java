@@ -87,18 +87,20 @@ public abstract class GalenTestBase extends GalenTestNgTestBase {
     }
 
     public int fontToInt(String font){
-        int fontNumber;
+        double fontNumberDouble;
+        int fontNumberInt;
         font = font.replaceAll("[^\\d.]", "");
-        fontNumber = Integer.parseInt(font);
-        return fontNumber;
+        fontNumberDouble = Double.parseDouble(font);
+        fontNumberInt = (int)(Math.round(fontNumberDouble));
+        return fontNumberInt;
     }
 
-    public String nowFontName(String id){
-        String found = getDriver().findElement(By.xpath(id)).getCssValue("value");
+    public String getFontType(String id){
+        String found = getDriver().findElement(By.xpath(id)).getCssValue("fontFamily");
         return found;
     }
     public double getFontPix(String id){
-        return fontClass.createWordsTypeFont(nowText(id),   fontClass.createFont("Arial",1,fontToInt(getFontAuto(id)))  ,true);
+        return fontClass.createWordsTypeFont(nowText(id),   fontClass.createFont("Arial",fontToInt(getFontAuto(id)))  ,true);
     }
 
 
@@ -116,12 +118,20 @@ public abstract class GalenTestBase extends GalenTestNgTestBase {
             return false;
 
     }
+
+    public boolean checkButtonOneId(String id){
+        if(getFontPix(id)<=getButtonPix(id))
+            return true;
+        else
+            return false;
+        }
+
     @DataProvider(name = "devices")
     public Object [][] devices () {
         return new Object[][] {
-                //{new TestDevice("mobile", new Dimension(450, 800), asList("mobile"))},
-                {new TestDevice("tablet", new Dimension(1024, 768), asList("ipad"))},
-                //{new TestDevice("desktop", new Dimension(1366, 768), asList("desktop"))}
+                //{new TestDevice("mobile", new Dimension(375, 627), asList("Iphone6"))},
+                //{new TestDevice("tablet", new Dimension(1024, 768), asList("ipad"))},
+                {new TestDevice("desktop", new Dimension(1366, 768), asList("desktop"))}
         };
     }
 

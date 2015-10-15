@@ -8,8 +8,8 @@ import java.io.IOException;
  */
 public class FontUtil {
 
-    public Font createFont(String fontName, int style, int fontSize){
-        java.awt.Font f = new java.awt.Font(fontName, style, fontSize);
+    public Font createFont(String fontName, int fontSize){
+        java.awt.Font f = new java.awt.Font(fontName, Font.BOLD, fontSize);
         return f;
     }
 
