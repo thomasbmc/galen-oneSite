@@ -8,25 +8,20 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import com.galenframework.testng.GalenTestNgReportsListener;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.galenframework.java.sample.components.FontUtil;
 
 import static java.util.Arrays.asList;
 @Listeners(value = GalenTestNgReportsListener.class)
-public abstract class GalenTestBase extends GalenTestNgTestBase {
+public abstract class GalenTestBase extends GalenTestNgTestBase implements Environment {
 
     public FontUtil fontClass = new FontUtil();
-    //Preview Environment
-    private static final String ENV_URL_GP_PRE = "http://www.gol.wip.vdev.gidapps.com/";
-    private static final String ENV_URL_BR_PRE = "http://www.brol.wip.vdev.gidapps.com/";
-    private static final String ENV_URL_ON_PRE = "http://www.onol.wip.vdev.gidapps.com/";
-    private static final String ENV_URL_AT_PRE = "http://www.atol.wip.vdev.gidapps.com/";
-    //VDEV Environment
-    private static final String ENV_URL_GP = "http://www.vdev.gidgol.com/";
-    private static final String ENV_URL_BR = "http://www.brol.vdev.gidgol.com/";
-    private static final String ENV_URL_ON = "http://www.onol.vdev.gidgol.com/";
-    private static final String ENV_URL_AT = "http://www.atol.vdev.gidgol.com/";
+
+
+
 
 
     @Override
@@ -76,6 +71,14 @@ public abstract class GalenTestBase extends GalenTestNgTestBase {
         getDriver().manage().timeouts().implicitlyWait(time, TimeUnit.SECONDS);
     }
 
+    public String transformToString(boolean status){
+        String statusString;
+        if(status==true)
+            return statusString= "Passed";
+        else
+            return statusString= "Failed";
+    }
+
     public String nowText(String id){
          String found = getDriver().findElement(By.xpath(id)).getAttribute("value");
          return found;
@@ -109,22 +112,21 @@ public abstract class GalenTestBase extends GalenTestNgTestBase {
         return found;
     }
 
-
-
-    public boolean checkLayoutVsText(double textSize, double butonSize){
-        if(textSize<=butonSize)
-            return true;
-        else
-            return false;
-
-    }
-
     public boolean checkButtonOneId(String id){
         if(getFontPix(id)<=getButtonPix(id))
             return true;
         else
             return false;
         }
+
+    public Log checkInput(String input, List<String> tags){
+        boolean status = checkButtonOneId(input);
+        Date date = new Date();
+        Log test = new Log(input.toString(), transformToString(status),
+                ("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags), date);
+        return test;
+
+    }
 
     @DataProvider(name = "devices")
     public Object [][] devices () {

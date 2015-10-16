@@ -1,124 +1,56 @@
 package com.galenframework.java.sample.tests;
 
 import com.galenframework.java.sample.components.GalenTestBase;
-import com.galenframework.reports.GalenTestInfo;
-import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.testng.GalenTestNgReportsListener;
+
+
+
 import org.testng.Assert;
+
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import com.galenframework.java.sample.components.Log;
+import com.galenframework.java.sample.components.TextLogWritter;
 
 
-
-import java.io.IOException;
-import java.util.LinkedList;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class WelcomePageTest extends GalenTestBase {
-
-    public String email_prev_button = "//*[@id=\"preview_bar_link\"]";
-    public String preview_setup_button = "//*[@id=\"preview_bar_setup\"]";
-    public String turn_lights_off_button = "//*[@id=\"preview_toggle_high_light\"]";
-    public String go_button = "//*[@id=\"previewContent\"]/form[1]/ul/li[5]/div/input";
-    public String date_txtField = "//*[@id=\"date\"]";
-    public String contry_dropMenu = "//*[@id=\"previewCountryCode\"]";
-
-
-
-
-    @Test(dataProvider = "devices")
-    public void previewBar_GP(TestDevice device) throws IOException {
-        load("preview", "GP", "PRE");
-        //For the own screen
-        if(device.getScreenSize().getWidth()==1366 && device.getScreenSize().getHeight()==768)
-            max();
-
-        //Vpn Slow
-        waitforsec(4);
-        LayoutReport layoutReport = new LayoutReport();
-
-        getReport().layout(layoutReport, "title");
-        //Checking Button Send by email link
-        Assert.assertEquals(checkButtonOneId(email_prev_button), true);
-        //Checking Button Preview Setup
-        Assert.assertEquals(checkButtonOneId(preview_setup_button), true);
-        //Checking Button Turn Lights Off
-        Assert.assertEquals(checkButtonOneId(turn_lights_off_button), true);
-
-        //Checking the spec for the component
-        checkLayout("/specs/previewBar.spec", device.getTags());
-    }
+    public static List<Log> logs = new ArrayList<Log>();
 
     @Test(dataProvider = "devices")
     public void previewBar_BR(TestDevice device) throws IOException {
-        //In the Load need to put http request, brand, and the type of ENV
+        //In the Load Methods needs to put the http request, brand, and the type of ENV
         load("preview", "BR", "PRE");
 
-        //For the own screen
+        //Resizing to my screen
         if(device.getScreenSize().getWidth()==1366 && device.getScreenSize().getHeight()==768)
             max();
 
-        //Vpn Slow
+        //Waiting 4 Sec because Vpn sucks
         waitforsec(4);
 
-        //Checking Button Send by email link
-        Assert.assertEquals(checkButtonOneId(email_prev_button), true);
-        //Checking Button Preview Setup
-        Assert.assertEquals(checkButtonOneId(preview_setup_button), true);
-        //Checking Button Turn Lights Off
-        Assert.assertEquals(checkButtonOneId(turn_lights_off_button), true);
 
-        Assert.assertEquals(checkButtonOneId(go_button), true);
-
-        Assert.assertEquals(checkButtonOneId(date_txtField), true);
-
-        //Checking the spec for the component
+        //Checking button inputs without galen
+        logs.add(checkInput(email_prev_button, device.getTags()));
+        logs.add(checkInput(preview_setup_button, device.getTags()));
+        logs.add(checkInput(turn_lights_off_button, device.getTags()));
+        logs.add(checkInput(go_button, device.getTags()));
+        logs.add(checkInput(contry_dropMenu, device.getTags()));
+        logs.add(checkInput(date_txtField, device.getTags()));
+        //Checking the galen spec for the component
         checkLayout("/specs/previewBar.spec", device.getTags());
+
     }
 
-    @Test(dataProvider = "devices")
-    public void previewBar_ON(TestDevice device) throws IOException {
-        load("preview", "ON", "PRE");
-        //For the own screen
-        if(device.getScreenSize().getWidth()==1366 && device.getScreenSize().getHeight()==768)
-            max();
-
-        //Vpn Slow
-        waitforsec(4);
-
-        //Checking Button Send by email link
-        Assert.assertEquals(checkButtonOneId(email_prev_button), true);
-        //Checking Button Preview Setup
-        Assert.assertEquals(checkButtonOneId(preview_setup_button), true);
-        //Checking Button Turn Lights Off
-        Assert.assertEquals(checkButtonOneId(turn_lights_off_button), true);
-
-        //Checking the spec for the component
-        checkLayout("/specs/previewBar.spec", device.getTags());
+    @AfterClass
+    public void outputLog() throws IOException {
+    TextLogWritter logWritter = new TextLogWritter();
+    logWritter.WriteLog(logs);
     }
 
-
-    @Test(dataProvider = "devices")
-    public void previewBar_AT(TestDevice device) throws IOException {
-        load("preview", "AT", "PRE");
-        //For the own screen
-        if(device.getScreenSize().getWidth()==1366 && device.getScreenSize().getHeight()==768)
-            max();
-
-        //Vpn Slow
-        waitforsec(4);
-
-        //Checking Button Send by email link
-         Assert.assertEquals(checkButtonOneId(email_prev_button), true);
-        //Checking Button Preview Setup
-        Assert.assertEquals(checkButtonOneId(preview_setup_button), true);
-        //Checking Button Turn Lights Off
-        Assert.assertEquals(checkButtonOneId(turn_lights_off_button), true);
-
-        //Checking the spec for the component
-        checkLayout("/specs/previewBar.spec", device.getTags());
-    }
 
 }

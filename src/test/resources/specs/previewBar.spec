@@ -9,7 +9,7 @@
 = Content =
     @on desktop
        previewBar:
-            height  179 to179px
+            height  179 to 180px
             width   1349px
 
        show-previewBar:
