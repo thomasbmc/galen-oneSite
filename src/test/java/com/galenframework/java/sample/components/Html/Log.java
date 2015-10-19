@@ -1,23 +1,25 @@
-package com.galenframework.java.sample.components;
+package com.galenframework.java.sample.components.Html;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
 
 /**
  * Created by tmphillips on 16-10-2015.
  */
 public class Log {
     public String title;
+    public String type;
+    public String input;
     public String status;
     public String descryption;
-    public Date date;
+    public String date;
 
     public Log(){}
 
-    public Log(String title, String status, String descryption, Date date){
+    public Log(String title, String type, String input, String status, String descryption, String date){
         this.title = title;
+        this.type = type;
+        this.input = input;
         this.status = status;
         this.descryption = descryption;
         this.date = date;
@@ -30,6 +32,22 @@ public class Log {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
     }
 
     public String getStatus() {
@@ -48,11 +66,11 @@ public class Log {
         this.descryption = descryption;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

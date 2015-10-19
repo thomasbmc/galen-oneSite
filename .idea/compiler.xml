@@ -26,7 +26,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="galen-java-sample-tests" target="1.6" />
+      <module name="galen-java-sample-tests" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

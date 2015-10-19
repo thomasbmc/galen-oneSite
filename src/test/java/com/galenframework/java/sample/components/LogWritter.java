@@ -1,5 +1,7 @@
 package com.galenframework.java.sample.components;
 
+import com.galenframework.java.sample.components.Html.Log;
+
 import java.io.IOException;
 import java.util.List;
 

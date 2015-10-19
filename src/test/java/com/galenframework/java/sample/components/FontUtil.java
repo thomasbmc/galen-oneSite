@@ -14,6 +14,7 @@ public class FontUtil {
     }
 
     public double createWordsTypeFont(String label, Font f, boolean verifyUpCase) {
+
         if(verifyUpCase==true)
             label = label.toUpperCase();
         Rectangle2D r = f.getStringBounds(label, new FontRenderContext(null, RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT, RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT));

@@ -1,17 +1,21 @@
 package com.galenframework.java.sample.components;
 
+import com.galenframework.java.sample.components.Html.Log;
+import com.galenframework.testng.GalenTestNgReportsListener;
 import com.galenframework.testng.GalenTestNgTestBase;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
-import com.galenframework.testng.GalenTestNgReportsListener;
+import java.util.*;
+import java.io.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
@@ -79,9 +83,14 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
             return statusString= "Failed";
     }
 
-    public String nowText(String id){
+    public String knowText(String id){
          String found = getDriver().findElement(By.xpath(id)).getAttribute("value");
          return found;
+    }
+
+    public String knowType(String id){
+        String found = getDriver().findElement(By.xpath(id)).getAttribute("type");
+        return found;
     }
 
     public String getFontAuto(String id){
@@ -103,7 +112,7 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
         return found;
     }
     public double getFontPix(String id){
-        return fontClass.createWordsTypeFont(nowText(id),   fontClass.createFont("Arial",fontToInt(getFontAuto(id)))  ,true);
+        return fontClass.createWordsTypeFont(knowText(id),   fontClass.createFont("Arial",fontToInt(getFontAuto(id)))  ,true);
     }
 
 
@@ -122,18 +131,75 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
     public Log checkInput(String input, List<String> tags){
         boolean status = checkButtonOneId(input);
         Date date = new Date();
-        Log test = new Log(input.toString(), transformToString(status),
-                ("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags), date);
+        Log test = new Log(knowText(input), knowType(input),input.toString(), transformToString(status),
+                ("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags), date.toString());
         return test;
 
     }
+
+    public List<String> testingMarker(String input, List<String> tags){
+        List<String> test = new ArrayList<String>();
+        boolean status = checkButtonOneId(input);
+        Date date = new Date();
+        test.add(input);
+        test.add(transformToString(status));
+        test.add(("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags));
+        test.add(date.toString());
+        return test;
+    }
+
+    public void outputMaker(String input, List<String> tags) {
+        try {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("blogTitle", "Framework Nisum Beta");
+            map.put("message", "Betaaaaa.");
+            //Instantiate Configuration class
+            Configuration cfg = new Configuration();
+            cfg.setDirectoryForTemplateLoading(new File("C:\\Users\\tmphillips\\Desktop\\galen-oneSite\\src\\test\\java\\com\\galenframework\\java\\sample\\components\\Html"));
+            cfg.setDefaultEncoding("UTF-8");
+            cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+            //Create Data Model
+            //Creating test
+            List<Log> tests = new ArrayList<>();
+            tests.add(buildTest(input, tags));
+            map.put("tests", tests) ;
+
+            //Instantiate template
+            Template template = cfg.getTemplate("HtmlTemplate.ftl");
+            //Console output
+            Writer console = new OutputStreamWriter(System.out);
+            template.process(map, console);
+            console.flush();
+            // File output
+            Writer file = new FileWriter(new File("C:\\Test.html"));
+            template.process(map, file);
+            file.flush();
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public Log buildTest(String input, List<String> tags) {
+
+        boolean status = checkButtonOneId(input);
+        Date date = new Date();
+        Log test = new Log(knowText(input), knowType(input),input, transformToString(status),
+                ("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags), date.toString());
+        return test;
+    }
+
 
     @DataProvider(name = "devices")
     public Object [][] devices () {
         return new Object[][] {
                 //{new TestDevice("mobile", new Dimension(375, 627), asList("Iphone6"))},
-                //{new TestDevice("tablet", new Dimension(1024, 768), asList("ipad"))},
-                {new TestDevice("desktop", new Dimension(1366, 768), asList("desktop"))}
+                {new TestDevice("tablet", new Dimension(1024, 768), asList("ipad"))},
+                //{new TestDevice("desktop", new Dimension(1366, 768), asList("desktop"))}
         };
     }
 
