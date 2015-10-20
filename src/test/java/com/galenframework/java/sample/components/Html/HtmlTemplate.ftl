@@ -11,7 +11,7 @@ ${test_index + 1}. <a href="${"http://www.google.cl"}"> ${test.title}</a> ${test
     <#if test.status=="Failed">
     <font color="red">${test.status}</font>
     <#else>
-    ${test.status}
+    <font color="green">${test.status}</font>$
     </#if>
 ${test.descryption}
 ${test.date} <br/>

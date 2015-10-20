@@ -148,7 +148,7 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
         return test;
     }
 
-    public void outputMaker(String input, List<String> tags) {
+    public void outputMaker(List<Log> tests) {
         try {
             Map<String, Object> map = new HashMap<>();
 
@@ -161,8 +161,8 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
             cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             //Create Data Model
             //Creating test
-            List<Log> tests = new ArrayList<>();
-            tests.add(buildTest(input, tags));
+            //List<Log> tests = new ArrayList<>();
+            //tests.add(buildTest(input, tags));
             map.put("tests", tests) ;
 
             //Instantiate template

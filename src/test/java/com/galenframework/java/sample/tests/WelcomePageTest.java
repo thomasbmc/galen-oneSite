@@ -39,14 +39,17 @@ public class WelcomePageTest extends GalenTestBase {
 
         //Checking the galen spec for the component
         checkLayout("/specs/previewBar.spec", device.getTags());
-        outputMaker(email_prev_button, device.getTags());
+
+        logs.add(buildTest(email_prev_button, device.getTags()));
+        logs.add(buildTest(turn_lights_off_button, device.getTags()));
+        logs.add(buildTest(turn_lights_off_button, device.getTags()));
+
     }
 
     @AfterClass
-    public void outputLog() throws IOException {
-    TextLogWritter logWritter = new TextLogWritter();
-    logWritter.WriteLog(logs);
-    }
+    public void report(){
+        outputMaker(logs);
+       }
 
 
 }
