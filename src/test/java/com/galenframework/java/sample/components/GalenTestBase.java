@@ -10,6 +10,7 @@ import freemarker.template.TemplateExceptionHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import static java.util.Arrays.asList;
 @Listeners(value = GalenTestNgReportsListener.class)
 public abstract class GalenTestBase extends GalenTestNgTestBase implements Environment {
-
+    public static List<Log> logs = new ArrayList<Log>();
     public FontUtil fontClass = new FontUtil();
 
 
@@ -75,28 +76,28 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
         getDriver().manage().timeouts().implicitlyWait(time, TimeUnit.SECONDS);
     }
 
+    public String createDate(){
+        return new Date().toString();
+    }
+
     public String transformToString(boolean status){
-        String statusString;
-        if(status==true)
-            return statusString= "Passed";
+        if(status)
+            return "Passed";
         else
-            return statusString= "Failed";
+            return "Failed";
     }
 
     public String knowText(String id){
-         String found = getDriver().findElement(By.xpath(id)).getAttribute("value");
-         return found;
+    return getDriver().findElement(By.xpath(id)).getAttribute("value");
     }
 
     public String knowType(String id){
-        String found = getDriver().findElement(By.xpath(id)).getAttribute("type");
-        return found;
+       return getDriver().findElement(By.xpath(id)).getAttribute("type");
     }
 
     public String getFontAuto(String id){
-        String found = getDriver().findElement(By.xpath(id)).getCssValue("fontSize");
-        return found;
-    }
+        return getDriver().findElement(By.xpath(id)).getCssValue("fontSize");
+     }
 
     public int fontToInt(String font){
         double fontNumberDouble;
@@ -108,11 +109,15 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
     }
 
     public String getFontType(String id){
-        String found = getDriver().findElement(By.xpath(id)).getCssValue("fontFamily");
-        return found;
+        return getDriver().findElement(By.xpath(id)).getCssValue("fontFamily");
     }
+
+    public String cropFontFamily(String fontFamily){
+        return fontFamily.split(",")[0];
+    }
+
     public double getFontPix(String id){
-        return fontClass.createWordsTypeFont(knowText(id),   fontClass.createFont("Arial",fontToInt(getFontAuto(id)))  ,true);
+        return fontClass.createWordsTypeFont(knowText(id),   fontClass.createFont(cropFontFamily(getFontType(id)),fontToInt(getFontAuto(id)))  ,true);
     }
 
 
@@ -128,24 +133,51 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
             return false;
         }
 
-    public Log checkInput(String input, List<String> tags){
-        boolean status = checkButtonOneId(input);
-        Date date = new Date();
-        Log test = new Log(knowText(input), knowType(input),input.toString(), transformToString(status),
-                ("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags), date.toString());
-        return test;
+    public List<Log> buildTestArray(String[] arrayInputs, List<String> tags){
+        for (String oneinput : arrayInputs) {
+            buildTest(oneinput, tags);
+            boolean status = checkButtonOneId(oneinput);
 
+            logs.add( new Log(knowText(oneinput), knowType(oneinput),oneinput, transformToString(status),
+                            ("Size Font: "+getFontPix(oneinput)+" Size Button: "+getButtonPix(oneinput)+" Device: "+tags), createDate())
+            );
+
+        }
+        return logs;
     }
 
-    public List<String> testingMarker(String input, List<String> tags){
-        List<String> test = new ArrayList<String>();
+
+    public Log buildTest(String input, List<String> tags) {
+
         boolean status = checkButtonOneId(input);
         Date date = new Date();
-        test.add(input);
-        test.add(transformToString(status));
-        test.add(("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags));
-        test.add(date.toString());
+        Log test = new Log(knowText(input), knowType(input),input, transformToString(status),
+                ("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags), date.toString());
         return test;
+    }
+
+    public double getDivPix(String id){
+        int found = getDriver().findElement(By.xpath(id)).getSize().getWidth();
+        return found;
+    }
+
+    public String[] getDivToCheck(String id){
+
+        String[] htmlInput = (getDriver().findElement(By.xpath(id)).getAttribute("innerHTML")).split("\\n");
+        for(int i=0; i<htmlInput.length; i++){
+            int counttwo=0;
+            String part = htmlInput[i];
+            int count = part.length();
+            for(int j=0; j<part.length(); j++){
+                if(part.charAt(j)==' ');
+                counttwo++;
+                if(counttwo==count){
+                    htmlInput[i] = null;
+                }
+            }
+        }
+        return htmlInput;
+
     }
 
     public void outputMaker(List<Log> tests) {
@@ -184,21 +216,16 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
     }
 
 
-    public Log buildTest(String input, List<String> tags) {
 
-        boolean status = checkButtonOneId(input);
-        Date date = new Date();
-        Log test = new Log(knowText(input), knowType(input),input, transformToString(status),
-                ("Size Font: "+getFontPix(input)+" Size Button: "+getButtonPix(input)+" Device: "+tags), date.toString());
-        return test;
-    }
+
+
 
 
     @DataProvider(name = "devices")
     public Object [][] devices () {
         return new Object[][] {
                 //{new TestDevice("mobile", new Dimension(375, 627), asList("Iphone6"))},
-                {new TestDevice("tablet", new Dimension(1024, 768), asList("ipad"))},
+                {new TestDevice("ipad", new Dimension(1024, 768), asList("ipad"))},
                 //{new TestDevice("desktop", new Dimension(1366, 768), asList("desktop"))}
         };
     }

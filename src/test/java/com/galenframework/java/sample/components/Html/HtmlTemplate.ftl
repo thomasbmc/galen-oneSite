@@ -5,16 +5,22 @@
 <p>
 ${message}
 </p>
-<h3>Title </h3>
+<h3>Title</h3>
+<table style="width:100%">
+<tr>
 <#list tests as test>
-${test_index + 1}. <a href="${"http://www.google.cl"}"> ${test.title}</a> ${test.type} ${test.input}
+    <td>${test_index + 1}. </td> <a href="${"http://www.google.cl"}"> <td>${test.title}</td></a> <td>${test.type}</td> <td>${test.input}</td>
+    <td>
     <#if test.status=="Failed">
     <font color="red">${test.status}</font>
     <#else>
-    <font color="green">${test.status}</font>$
+    <font color="green">${test.status}</font>
     </#if>
-${test.descryption}
-${test.date} <br/>
+    </td>
+    <td>${test.descryption}</td>
+    <td>${test.date}</td>
+ </tr>
 </#list>
+</table>
 </body>
 </html> 

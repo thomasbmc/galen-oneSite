@@ -9,6 +9,7 @@ import freemarker.template.TemplateException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import com.galenframework.java.sample.components.Html.Log;
+import com.galenframework.java.sample.components.InputAdapter;
 import com.galenframework.java.sample.components.TextLogWritter;
 
 
@@ -18,8 +19,8 @@ import java.util.List;
 
 
 public class WelcomePageTest extends GalenTestBase {
-    public static List<Log> logs = new ArrayList<Log>();
     public TemplateMaker output = new TemplateMaker();
+    public TextLogWritter logMaker = new TextLogWritter();
 
     @Test(dataProvider = "devices")
     public void previewBar_BR(TestDevice device) throws IOException, TemplateException {
@@ -39,17 +40,15 @@ public class WelcomePageTest extends GalenTestBase {
 
         //Checking the galen spec for the component
         checkLayout("/specs/previewBar.spec", device.getTags());
+        getDivPix("//*[@id=\"responsiveUniversalBar\"]/div[2]/div[2]/header/div[3]");
+        getDivToCheck("//*[@id=\"responsiveUniversalBar\"]/div[2]/div[2]/header/div[3]");
 
-        logs.add(buildTest(email_prev_button, device.getTags()));
-        logs.add(buildTest(turn_lights_off_button, device.getTags()));
-        logs.add(buildTest(turn_lights_off_button, device.getTags()));
+        outputMaker(buildTestArray(InputAdapter.makingArray(inputio), device.getTags()));
+
 
     }
 
-    @AfterClass
-    public void report(){
-        outputMaker(logs);
-       }
+
 
 
 }

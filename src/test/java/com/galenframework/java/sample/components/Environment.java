@@ -1,5 +1,6 @@
 package com.galenframework.java.sample.components;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,4 +26,5 @@ public interface Environment {
     final String go_button = "//*[@id=\"previewContent\"]/form[1]/ul/li[5]/div/input";
     final String date_txtField = "//*[@id=\"date\"]";
     final String contry_dropMenu = "//*[@id=\"previewCountryCode\"]";
+    final File inputio = new File("C:\\Users\\tmphillips\\Desktop\\galen-oneSite\\src\\test\\resources\\inputs\\previewBar.io");
 }
