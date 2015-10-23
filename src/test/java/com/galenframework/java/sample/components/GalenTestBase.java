@@ -166,19 +166,21 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
         String[] htmlInput = (getDriver().findElement(By.xpath(id)).getAttribute("innerHTML")).split("\\n");
         for(int i=0; i<htmlInput.length; i++){
             int counttwo=0;
+            int count =0;
             String part = htmlInput[i];
-            int count = part.length();
+            count = part.length();
+            part.replaceAll("\\s", "");
             for(int j=0; j<part.length(); j++){
-                if(part.charAt(j)==' ');
+                if(part.charAt(j)==' ')
                 counttwo++;
-                if(counttwo==count){
+                if(counttwo==count)
                     htmlInput[i] = null;
-                }
-            }
+        }
         }
         return htmlInput;
 
     }
+
 
     public void outputMaker(List<Log> tests) {
         try {
