@@ -25,7 +25,7 @@ public class WelcomePageTest extends GalenTestBase {
     @Test(dataProvider = "devices")
     public void previewBar_BR(TestDevice device) throws IOException, TemplateException {
         //In the Load Methods needs to put the http request, brand, and the type of ENV
-        load("preview", "BR", "PRE");
+        load("", "BR", "PRE");
 
         //Resizing to my screen
         if(device.getScreenSize().getWidth()==1366 && device.getScreenSize().getHeight()==768)
@@ -41,7 +41,10 @@ public class WelcomePageTest extends GalenTestBase {
         //Checking the galen spec for the component
         checkLayout("/specs/previewBar.spec", device.getTags());
         getDivPix("//*[@id=\"responsiveUniversalBar\"]/div[2]/div[2]/header/div[3]");
-        getDivToCheck("//*[@id=\"responsiveUniversalBar\"]/div[2]/div[2]/header/div[3]");
+        getDivToCheck("//*[@id=\"divisionContainer\"]");
+
+        getFontPix("//*[@id=\"divisionContainer\"]/ul/li[1]");
+        getButtonPix("//*[@id=\"divisionContainer\"]/ul/li[1]");
 
         outputMaker(buildTestArray(InputAdapter.makingArray(inputio), device.getTags()));
 

@@ -31,7 +31,9 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
 
     @Override
     public WebDriver createDriver(Object[] args) {
+        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+
         if (args.length > 0) {
             if (args[0] != null && args[0] instanceof TestDevice) {
                 TestDevice device = (TestDevice)args[0];
@@ -157,8 +159,7 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
     }
 
     public double getDivPix(String id){
-        int found = getDriver().findElement(By.xpath(id)).getSize().getWidth();
-        return found;
+        return getDriver().findElement(By.xpath(id)).getSize().getWidth();
     }
 
     public String[] getDivToCheck(String id){
@@ -169,7 +170,10 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
             int count =0;
             String part = htmlInput[i];
             count = part.length();
-            part.replaceAll("\\s", "");
+            htmlInput[i]=part.trim();
+            if(htmlInput[i].length()==0){
+                htmlInput[i]=null;
+            }
             for(int j=0; j<part.length(); j++){
                 if(part.charAt(j)==' ')
                 counttwo++;
@@ -180,6 +184,13 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
         return htmlInput;
 
     }
+
+    /*public ArrayList DivElementCount(String[] htmlSource){
+        int div;
+        for(int i=0; i<htmlSource.length; i++){
+            if(htmlSource[i].contains("div"))
+        }
+    }*/
 
 
     public void outputMaker(List<Log> tests) {

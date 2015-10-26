@@ -10,7 +10,7 @@ import java.util.List;
 public interface Environment {
     //Preview Environment
     static final String ENV_URL_GP_PRE = "http://www.gol.wip.vdev.gidapps.com/";
-    static final String ENV_URL_BR_PRE = "http://www.brol.wip.vdev.gidapps.com/";
+    static final String ENV_URL_BR_PRE = "http://www.bananarepublic.com";//"http://www.brol.wip.vdev.gidapps.com/";
     static final String ENV_URL_ON_PRE = "http://www.onol.wip.vdev.gidapps.com/";
     static final String ENV_URL_AT_PRE = "http://www.atol.wip.vdev.gidapps.com/";
     //VDEV Environment
