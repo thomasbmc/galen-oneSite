@@ -15,6 +15,7 @@ import com.galenframework.java.sample.components.TextLogWritter;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -42,7 +43,7 @@ public class WelcomePageTest extends GalenTestBase {
         checkLayout("/specs/previewBar.spec", device.getTags());
         getDivPix("//*[@id=\"responsiveUniversalBar\"]/div[2]/div[2]/header/div[3]");
         getDivToCheck("//*[@id=\"divisionContainer\"]");
-
+        analyzeDivisionContainerDiv(getDivToCheck("//*[@id=\"divisionContainer\"]"));
         getFontPix("//*[@id=\"divisionContainer\"]/ul/li[1]");
         getButtonPix("//*[@id=\"divisionContainer\"]/ul/li[1]");
 
@@ -52,6 +53,7 @@ public class WelcomePageTest extends GalenTestBase {
     }
 
 
+    }
 
 
-}
+

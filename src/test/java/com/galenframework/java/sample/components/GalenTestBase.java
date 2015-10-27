@@ -31,7 +31,7 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
 
     @Override
     public WebDriver createDriver(Object[] args) {
-        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
 
         if (args.length > 0) {
@@ -162,37 +162,49 @@ public abstract class GalenTestBase extends GalenTestNgTestBase implements Envir
         return getDriver().findElement(By.xpath(id)).getSize().getWidth();
     }
 
-    public String[] getDivToCheck(String id){
+    public List getDivToCheck(String id){
 
-        String[] htmlInput = (getDriver().findElement(By.xpath(id)).getAttribute("innerHTML")).split("\\n");
-        for(int i=0; i<htmlInput.length; i++){
+        String[] htmlSource = (getDriver().findElement(By.xpath(id)).getAttribute("innerHTML")).split("\\n");
+        List<String> htmlInput = new LinkedList<String>(Arrays.asList(htmlSource));
+        for(int i=0; i<htmlInput.size(); i++){
             int counttwo=0;
             int count =0;
-            String part = htmlInput[i];
+            String part = htmlInput.get(i);
             count = part.length();
-            htmlInput[i]=part.trim();
-            if(htmlInput[i].length()==0){
-                htmlInput[i]=null;
+            htmlInput.set(i, part.trim());
+            if(htmlInput.get(i).length()==0){
+                htmlInput.remove(i);
             }
             for(int j=0; j<part.length(); j++){
                 if(part.charAt(j)==' ')
                 counttwo++;
                 if(counttwo==count)
-                    htmlInput[i] = null;
+                    htmlInput.remove(i);
         }
         }
         return htmlInput;
 
     }
 
-    /*public ArrayList DivElementCount(String[] htmlSource){
-        int div;
-        for(int i=0; i<htmlSource.length; i++){
-            if(htmlSource[i].contains("div"))
+    public List<List<String>> analyzeDivisionContainerDiv(List<String> list) {
+
+        List<List<String>> ret = new ArrayList<List<String>>();
+        //for (String li : list) {
+        for(int i=0; i<list.size(); i++){
+            if (list.get(i).startsWith("<li") && (!list.get(i).contains("divisionSeparator"))) {
+                //lets process the li and its content
+
+                List<String> listOfTags = Arrays.asList(list.get(i).split("><"));
+
+                if (listOfTags.get(listOfTags.size() - 1).endsWith("/li")) {
+                    listOfTags.remove(listOfTags.size() - 1);
+                }
+                ret.add(listOfTags);
+            }
+
         }
-    }*/
-
-
+        return ret;
+    }
     public void outputMaker(List<Log> tests) {
         try {
             Map<String, Object> map = new HashMap<>();
